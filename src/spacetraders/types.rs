@@ -8,8 +8,3 @@ pub struct Agent {
     pub headquarters: String,
     pub credits: i32,
 }
-
-#[derive(Deserialize, Debug)]
-pub struct AgentApiResponse {
-    pub data: Agent,
-}
