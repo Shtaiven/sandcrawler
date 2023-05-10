@@ -9,10 +9,14 @@ use std::fs;
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
+
+    // TODO: Handle arguments nicely
     let token_file = &args[1];
     println!("token file: {token_file}");
     let token = fs::read_to_string(token_file)
         .expect("Couldn't read token file contents");
+
+    // TODO: Turn this into a cli app
     let agent = spacetraders::api::get_agent(token).await?;
     println!("{:?}", agent);
     Ok(())
