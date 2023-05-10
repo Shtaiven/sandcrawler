@@ -1,2 +1,2 @@
 # sandcrawler
-A rust client for [SpaceTraders](spacetraders.io)
+A rust client for [SpaceTraders](https://www.spacetraders.io)
