@@ -336,11 +336,9 @@ pub struct ShipCrew {
 
     #[serde(default)]
     pub rotation: ShipCrewRotation,
-    pub morale: ShipCrewMorale,
+    pub morale: ShipCondition,
     pub wages: i32,
 }
-
-type ShipCrewMorale = i32;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "UPPERCASE")]
@@ -384,43 +382,243 @@ impl fmt::Display for ShipEngineSymbol {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipFrame {}
+pub struct ShipFrame {
+    pub symbol: ShipFrameSymbol,
+    pub name: String,
+    pub description: String,
+    pub condition: i32,
+    pub module_slots: i32,
+    pub mounting_points: i32,
+    pub fuel_capacity: i32,
+    pub requirements: ShipRequirements,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipFrameSymbol {
+    FrameProbe,
+    FrameDrone,
+    FrameInterceptor,
+    FrameRacer,
+    FrameFighter,
+    FrameFrigate,
+    FrameShuttle,
+    FrameExplorer,
+    FrameMiner,
+    FrameLightFreighter,
+    FrameHeavyFreighter,
+    FrameTransport,
+    FrameDestroyer,
+    FrameCruiser,
+    FrameCarrier,
+}
+impl fmt::Display for ShipFrameSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipFuel {}
+pub struct ShipFuel {
+    pub current: i32,
+    pub capacity: i32,
+    pub consumed: ShipFuelConsumed,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipModule {}
+pub struct ShipFuelConsumed {
+    pub amount: i32,
+    pub timestamp: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipMount {}
+pub struct ShipModule {
+    pub symbol: ShipModuleSymbol,
+    pub capacity: i32,
+    pub range: i32,
+    pub name: String,
+    pub description: String,
+    pub requirements: ShipRequirements,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipModuleSymbol {
+    ModuleMineralProcessorI,
+    ModuleCargoHoldI,
+    ModuleCrewQuartersI,
+    ModuleEnvoyQuartersI,
+    ModulePassengerCabinI,
+    ModuleMicroRefineryI,
+    ModuleOreRefineryI,
+    ModuleFuelRefineryI,
+    ModuleScienceLabI,
+    ModuleJumpDriveI,
+    ModuleJumpDriveIi,
+    ModuleJumpDriveIii,
+    ModuleWarpDriveI,
+    ModuleWarpDriveIi,
+    ModuleWarpDriveIii,
+    ModuleShieldGeneratorI,
+    ModuleShieldGeneratorIi,
+}
+impl fmt::Display for ShipModuleSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipNav {}
+pub struct ShipMount {
+    pub symbol: ShipMountSymbol,
+    pub name: String,
+    pub description: String,
+    pub strength: i32,
+    pub deposits: Vec<ShipMountDeposit>,
+    pub requirements: ShipRequirements,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipMountDeposit {
+    QuartzSand,
+    SiliconCrystals,
+    PreciousStones,
+    IceWater,
+    AmmoniaIce,
+    IronOre,
+    CopperOre,
+    SilverOre,
+    AluminumOre,
+    GoldOre,
+    PlatinumOre,
+    Diamonds,
+    UraniteOre,
+    MeritiumOre,
+}
+impl fmt::Display for ShipMountDeposit {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipMountSymbol {
+    MountGasSiphonI,
+    MountGasSiphonIi,
+    MountGasSiphonIii,
+    MountSurveyorI,
+    MountSurveyorIi,
+    MountSurveyorIii,
+    MountSensorArrayI,
+    MountSensorArrayIi,
+    MountSensorArrayIii,
+    MountMiningLaserI,
+    MountMiningLaserIi,
+    MountMiningLaserIii,
+    MountLaserCannonI,
+    MountMissileLauncherI,
+    MountTurretI,
+}
+impl fmt::Display for ShipMountSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipNavFlightMode {}
+pub struct ShipNav {
+    pub system_symbol: String,
+    pub waypoint_symbol: String,
+    pub route: ShipNavRoute,
+    pub status: ShipNavStatus,
+
+    #[serde(default)]
+    pub flight_mode: ShipNavFlightMode,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipNavFlightMode {
+    Drift,
+    Stealth,
+    Cruise,
+    Burn,
+}
+impl Default for ShipNavFlightMode {
+    fn default() -> ShipNavFlightMode {
+        ShipNavFlightMode::Cruise
+    }
+}
+impl fmt::Display for ShipNavFlightMode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipNavRoute {}
+pub struct ShipNavRoute {
+    pub destination: ShipNavRouteWaypoint,
+    pub departure: ShipNavRouteWaypoint,
+    pub departure_time: String,
+    pub arrival: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipNavRouteWaypoint {}
+pub struct ShipNavRouteWaypoint {
+    pub symbol: String,
+    pub r#type: WaypointType,
+    pub system_symbol: String,
+    pub x: i32,
+    pub y: i32,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipNavStatus {
+    InTransit,
+    InOrbit,
+    Docked,
+}
+impl fmt::Display for ShipNavStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipNavStatus {}
+pub struct ShipReactor {
+    pub symbol: ShipReactorSymbol,
+    pub name: String,
+    pub description: String,
+    pub condition: ShipCondition,
+    pub power_output: i32,
+    pub requirements: ShipRequirements,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ShipReactor {}
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipReactorSymbol {
+    ReactorSolarI,
+    ReactorFusionI,
+    ReactorFissionI,
+    ReactorChemicalI,
+    ReactorAntimatterI,
+}
+impl fmt::Display for ShipReactorSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -432,7 +630,11 @@ pub struct ShipRegistration {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipRequirements {}
+pub struct ShipRequirements {
+    pub power: i32,
+    pub crew: i32,
+    pub slots: i32,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "UPPERCASE")]
@@ -459,12 +661,33 @@ impl fmt::Display for ShipRole {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ShipType {}
+#[serde(rename_all = "UPPERCASE")]
+pub enum ShipType {
+    ShipProbe,
+    ShipMiningDrone,
+    ShipInterceptor,
+    ShipLightHauler,
+    ShipCommandFrigate,
+    ShipExplorer,
+    ShipHeavyFreighter,
+    ShipLightShuttle,
+    ShipOreHound,
+    ShipRefiningFreighter,
+}
+impl fmt::Display for ShipType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct Shipyard {}
+pub struct Shipyard {
+    pub symbol: String,
+    pub ship_types: Vec<ShipType>,
+    pub transactions: Vec<ShipyardTransaction>,
+    pub ships: Vec<ShipyardShip>,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
