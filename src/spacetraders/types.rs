@@ -691,27 +691,74 @@ pub struct Shipyard {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipyardShip {}
+pub struct ShipyardShip {
+    pub r#type: ShipType,
+    pub name: String,
+    pub description: String,
+    pub purchase_price: i32,
+    pub frame: ShipFrame,
+    pub reactor: ShipReactor,
+    pub engine: ShipEngine,
+    pub modules: Vec<ShipModule>,
+    pub mounts: Vec<ShipMount>,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ShipyardTransaction {}
+pub struct ShipyardTransaction {
+    pub waypoint_symbol: String,
+    pub ship_symbol: String,
+    pub price: i32,
+    pub agent_symbol: String,
+    pub timestamp: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct Survey {}
+pub struct Survey {
+    pub signature: String,
+    pub symbol: String,
+    pub deposits: Vec<SurveyDeposit>,
+    pub expiration: String,
+    pub size: SurveySize,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum SurveySize {
+    Small,
+    Moderate,
+    Large,
+}
+impl fmt::Display for SurveySize {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct SurveyDeposit {}
+pub struct SurveyDeposit {
+    pub symbol: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct System {}
+pub struct System {
+    pub symbol: String,
+    pub sector_symbol: String,
+    pub r#type: SystemType,
+    pub x: i32,
+    pub y: i32,
+    pub waypoints: Vec<SystemWaypoint>,
+    pub factions: Vec<SystemFaction>,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct SystemFaction {}
+pub struct SystemFaction {
+    pub symbol: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "UPPERCASE")]
@@ -735,7 +782,12 @@ impl fmt::Display for SystemType {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct SystemWaypoint {}
+pub struct SystemWaypoint {
+    pub symbol: String,
+    pub r#type: WaypointType,
+    pub x: i32,
+    pub y: i32,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -867,19 +919,106 @@ impl fmt::Display for TradeSymbol {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct Waypoint {}
+pub struct Waypoint {
+    pub symbol: String,
+    pub r#type: WaypointType,
+    pub system_symbol: String,
+    pub x: i32,
+    pub y: i32,
+    pub orbitals: Vec<WaypointOrbital>,
+    pub faction: WaypointFaction,
+    pub traits: Vec<WaypointTrait>,
+    pub charts: Vec<Chart>,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct WaypointFaction {}
+pub struct WaypointFaction {
+    pub symbol: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct WaypointOrbital {}
+pub struct WaypointOrbital {
+    pub symbol: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct WaypointTrait {}
+pub struct WaypointTrait {
+    pub symbol: WaypointTraitSymbol,
+    pub name: String,
+    pub description: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "UPPERCASE")]
+pub enum WaypointTraitSymbol {
+    Uncharted,
+    Marketplace,
+    Shipyard,
+    Outpost,
+    ScatteredSettlements,
+    SprawlingCities,
+    MegaStructures,
+    Overcrowded,
+    HighTech,
+    Corrupt,
+    Bureaucratic,
+    TradingHub,
+    Industrial,
+    BlackMarket,
+    ResearchFacility,
+    MilitaryBase,
+    SurveillanceOutpost,
+    ExplorationOutpost,
+    MineralDeposits,
+    CommonMetalDeposits,
+    PreciousMetalDeposits,
+    RareMetalDeposits,
+    MethanePools,
+    IceCrystals,
+    ExplosiveGases,
+    StrongMagnetosphere,
+    VibrantAuroras,
+    SaltFlats,
+    Canyons,
+    PerpetualDaylight,
+    PerpetualOvercast,
+    DrySeabeds,
+    MagmaSeas,
+    Supervolcanoes,
+    AshClouds,
+    VastRuins,
+    MutatedFlora,
+    Terraformed,
+    ExtremeTemperatures,
+    ExtremePressure,
+    DiverseLife,
+    ScarceLife,
+    Fossils,
+    WeakGravity,
+    StrongGravity,
+    CrushingGravity,
+    ToxicAtmosphere,
+    CorrosiveAtmosphere,
+    BreathableAtmosphere,
+    Jovian,
+    Rocky,
+    Volcanic,
+    Frozen,
+    Swamp,
+    Barren,
+    Temperate,
+    Jungle,
+    Ocean,
+    Stripped,
+}
+impl fmt::Display for WaypointTraitSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "UPPERCASE")]

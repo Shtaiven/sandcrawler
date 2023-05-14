@@ -2,6 +2,7 @@ use reqwest::Error;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct AgentApiResponse {
     pub data: super::types::Agent,
 }
@@ -15,7 +16,7 @@ pub async fn get_agent(token: String) -> Result<super::types::Agent, Error> {
     let response = client
         .get(request_url)
         .header("Content-Type", "application/json")
-        .header("Authorization", format!("Bearer {}", token))
+        .header("Authorization", format!("Bearer {}", token.trim()))
         .send()
         .await?;
 
