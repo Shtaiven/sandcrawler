@@ -13,9 +13,23 @@ pub struct Agent {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Chart {
+    #[serde(default)]
     pub waypoint_symbol: String,
+
+    #[serde(default)]
     pub submitted_by: String,
+
+    #[serde(default)]
     pub submitted_on: String,
+}
+impl Default for Chart {
+    fn default() -> Chart {
+        Chart {
+            waypoint_symbol: "".to_string(),
+            submitted_by: "".to_string(),
+            submitted_on: "".to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -33,7 +47,7 @@ pub struct ConnectedSystem {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ContractType {
     Procurement,
     Transport,
@@ -78,6 +92,8 @@ pub struct ContractPayment {
 pub struct ContractTerms {
     pub deadline: String,
     pub payment: ContractPayment,
+
+    #[serde(default)]
     pub deliver: Vec<ContractDeliverGood>,
 }
 
@@ -115,7 +131,7 @@ pub struct Faction {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum FactionTraitSymbol {
     Bureaucratic,
     Secretive,
@@ -195,6 +211,8 @@ pub struct FactionTrait {
 #[serde(rename_all = "camelCase")]
 pub struct JumpGate {
     pub jump_range: i32,
+
+    #[serde(default)]
     pub faction_symbol: String,
     pub connected_systems: Vec<ConnectedSystem>,
 }
@@ -206,7 +224,11 @@ pub struct Market {
     pub exports: Vec<TradeGood>,
     pub imports: Vec<TradeGood>,
     pub exchange: Vec<TradeGood>,
+
+    #[serde(default)]
     pub transactions: Vec<MarketTransaction>,
+
+    #[serde(default)]
     pub trade_goods: Vec<MarketTradeGood>,
 }
 
@@ -221,7 +243,7 @@ pub struct MarketTradeGood {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MarketTradeGoodSupply {
     Scarce,
     Limited,
@@ -261,10 +283,42 @@ pub struct ScannedShip {
     pub symbol: String,
     pub registration: ShipRegistration,
     pub nav: ShipNav,
-    pub frame: ShipFrame,
-    pub reactor: ShipReactor,
+
+    #[serde(default)]
+    pub frame: ScannedShipFrame,
+
+    #[serde(default)]
+    pub reactor: ScannedShipReactor,
     pub engine: ShipEngine,
+
+    #[serde(default)]
     pub mounts: Vec<ShipMount>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ScannedShipFrame {
+    pub symbol: String,
+}
+impl Default for ScannedShipFrame {
+    fn default() -> ScannedShipFrame {
+        ScannedShipFrame {
+            symbol: "".to_string(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ScannedShipReactor {
+    pub symbol: String,
+}
+impl Default for ScannedShipReactor {
+    fn default() -> ScannedShipReactor {
+        ScannedShipReactor {
+            symbol: "".to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -287,9 +341,13 @@ pub struct ScannedWaypoint {
     pub x: i32,
     pub y: i32,
     pub orbitals: Vec<WaypointOrbital>,
+
+    #[serde(default)]
     pub faction: WaypointFaction,
     pub traits: Vec<WaypointTrait>,
-    pub chart: Vec<Chart>,
+
+    #[serde(default)]
+    pub chart: Chart,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -341,7 +399,7 @@ pub struct ShipCrew {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipCrewRotation {
     Strict,
     Relaxed,
@@ -367,7 +425,7 @@ pub struct ShipEngine {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipEngineSymbol {
     EngineImpulseDriveI,
     EngineIonDriveI,
@@ -386,6 +444,8 @@ pub struct ShipFrame {
     pub symbol: ShipFrameSymbol,
     pub name: String,
     pub description: String,
+
+    #[serde(default)]
     pub condition: i32,
     pub module_slots: i32,
     pub mounting_points: i32,
@@ -394,7 +454,7 @@ pub struct ShipFrame {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipFrameSymbol {
     FrameProbe,
     FrameDrone,
@@ -423,6 +483,8 @@ impl fmt::Display for ShipFrameSymbol {
 pub struct ShipFuel {
     pub current: i32,
     pub capacity: i32,
+
+    #[serde(default)]
     pub consumed: ShipFuelConsumed,
 }
 
@@ -432,20 +494,34 @@ pub struct ShipFuelConsumed {
     pub amount: i32,
     pub timestamp: String,
 }
+impl Default for ShipFuelConsumed {
+    fn default() -> ShipFuelConsumed {
+        ShipFuelConsumed {
+            amount: 0,
+            timestamp: "".to_string(),
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ShipModule {
     pub symbol: ShipModuleSymbol,
+
+    #[serde(default)]
     pub capacity: i32,
+
+    #[serde(default)]
     pub range: i32,
     pub name: String,
+
+    #[serde(default)]
     pub description: String,
     pub requirements: ShipRequirements,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipModuleSymbol {
     ModuleMineralProcessorI,
     ModuleCargoHoldI,
@@ -476,14 +552,20 @@ impl fmt::Display for ShipModuleSymbol {
 pub struct ShipMount {
     pub symbol: ShipMountSymbol,
     pub name: String,
+
+    #[serde(default)]
     pub description: String,
+
+    #[serde(default)]
     pub strength: i32,
+
+    #[serde(default)]
     pub deposits: Vec<ShipMountDeposit>,
     pub requirements: ShipRequirements,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipMountDeposit {
     QuartzSand,
     SiliconCrystals,
@@ -507,7 +589,7 @@ impl fmt::Display for ShipMountDeposit {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipMountSymbol {
     MountGasSiphonI,
     MountGasSiphonIi,
@@ -544,7 +626,7 @@ pub struct ShipNav {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipNavFlightMode {
     Drift,
     Stealth,
@@ -582,7 +664,7 @@ pub struct ShipNavRouteWaypoint {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipNavStatus {
     InTransit,
     InOrbit,
@@ -600,13 +682,15 @@ pub struct ShipReactor {
     pub symbol: ShipReactorSymbol,
     pub name: String,
     pub description: String,
+
+    #[serde(default)]
     pub condition: ShipCondition,
     pub power_output: i32,
     pub requirements: ShipRequirements,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipReactorSymbol {
     ReactorSolarI,
     ReactorFusionI,
@@ -631,13 +715,18 @@ pub struct ShipRegistration {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ShipRequirements {
+    #[serde(default)]
     pub power: i32,
+
+    #[serde(default)]
     pub crew: i32,
+
+    #[serde(default)]
     pub slots: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipRole {
     Fabricator,
     Harvester,
@@ -661,7 +750,7 @@ impl fmt::Display for ShipRole {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ShipType {
     ShipProbe,
     ShipMiningDrone,
@@ -673,10 +762,16 @@ pub enum ShipType {
     ShipLightShuttle,
     ShipOreHound,
     ShipRefiningFreighter,
+    Unknown,
 }
 impl fmt::Display for ShipType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+impl Default for ShipType {
+    fn default() -> ShipType {
+        ShipType::Unknown
     }
 }
 
@@ -685,13 +780,18 @@ impl fmt::Display for ShipType {
 pub struct Shipyard {
     pub symbol: String,
     pub ship_types: Vec<ShipType>,
+
+    #[serde(default)]
     pub transactions: Vec<ShipyardTransaction>,
+
+    #[serde(default)]
     pub ships: Vec<ShipyardShip>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ShipyardShip {
+    #[serde(default)]
     pub r#type: ShipType,
     pub name: String,
     pub description: String,
@@ -724,7 +824,7 @@ pub struct Survey {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SurveySize {
     Small,
     Moderate,
@@ -761,7 +861,7 @@ pub struct SystemFaction {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SystemType {
     NeutronStar,
     RedStar,
@@ -798,7 +898,7 @@ pub struct TradeGood {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TradeSymbol {
     PreciousStones,
     QuartzSand,
@@ -926,15 +1026,26 @@ pub struct Waypoint {
     pub x: i32,
     pub y: i32,
     pub orbitals: Vec<WaypointOrbital>,
+
+    #[serde(default)]
     pub faction: WaypointFaction,
     pub traits: Vec<WaypointTrait>,
-    pub charts: Vec<Chart>,
+
+    #[serde(default)]
+    pub chart: Chart,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct WaypointFaction {
     pub symbol: String,
+}
+impl Default for WaypointFaction {
+    fn default() -> WaypointFaction {
+        WaypointFaction {
+            symbol: "".to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -952,7 +1063,7 @@ pub struct WaypointTrait {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum WaypointTraitSymbol {
     Uncharted,
     Marketplace,
@@ -1021,7 +1132,7 @@ impl fmt::Display for WaypointTraitSymbol {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "UPPERCASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum WaypointType {
     Planet,
     GasGiant,

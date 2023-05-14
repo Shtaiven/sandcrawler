@@ -24,16 +24,16 @@ pub struct Registration {
 }
 
 pub async fn register_new_agent(
-    symbol: String,
-    faction: String,
-    email: String,
+    symbol: &str,
+    faction: &str,
+    email: &str,
 ) -> Result<Registration, Error> {
     let client = reqwest::Client::new();
     let request_url = "https://api.spacetraders.io/v2/register";
     let register_request = RegisterRequest {
-        faction,
-        symbol,
-        email,
+        faction: faction.to_string(),
+        symbol: symbol.to_string(),
+        email: email.to_string(),
     };
 
     let request_body = serde_json::to_string(&register_request).unwrap();
@@ -58,7 +58,7 @@ struct AgentApiResponse {
 
 // TODO: Make api methods use the same client and token
 // TODO: Ensure the maximum requests per second is respected
-pub async fn my_agent_details(token: String) -> Result<types::Agent, Error> {
+pub async fn my_agent_details(token: &str) -> Result<types::Agent, Error> {
     let client = reqwest::Client::new();
     let request_url = "https://api.spacetraders.io/v2/my/agent";
 
