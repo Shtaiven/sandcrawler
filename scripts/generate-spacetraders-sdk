@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+./openapitools/openapi-generator-cli generate -i "https://stoplight.io/api/v1/projects/spacetraders/spacetraders/nodes/reference/SpaceTraders.json?fromExportButton=true&snapshotType=http_service&deref=optimizedBundle" \
+ -o ../src/spacetraders-sdk \
+ -g rust
+

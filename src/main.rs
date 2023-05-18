@@ -2,7 +2,7 @@
 
 pub mod spacetraders;
 
-use reqwest::Error;
+use spacetraders_sdk::apis::Error;
 use spacetraders::api;
 use spacetraders::types;
 use std::env;
@@ -54,7 +54,7 @@ async fn run_cli(token_file: &str) -> Result<bool, Error> {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> Result<(), Error<>> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() >= 2 {
