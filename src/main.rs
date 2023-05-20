@@ -52,13 +52,14 @@ async fn run_registration(args: Vec<String>) -> Result<(), ()> {
         "Registration with values\n\tsymbol:\t{symbol}\n\tfaction:\t{faction:?}\n\temail:\t{email}"
     );
 
-    let registration_result = apis::default_api::register(&configuration, Some(register_request)).await;
+    let registration_result =
+        apis::default_api::register(&configuration, Some(register_request)).await;
     let registration = match registration_result {
         Ok(response) => response.data,
         Err(error) => {
             println!("Registration error: {:?}", error);
             return Err(());
-        },
+        }
     };
 
     let token_file_path = format!("token_{symbol}.txt");
@@ -70,7 +71,7 @@ async fn run_registration(args: Vec<String>) -> Result<(), ()> {
         Err(error) => {
             println!("Couldn't write token to file {}", token_file_path);
             return Err(());
-        },
+        }
     };
     file.write_all(registration.token.as_bytes());
     println!("Registration of {symbol} succeeded\nToken written to {token_file_path}");
@@ -91,7 +92,7 @@ async fn run_cli(token_file: &str) -> Result<(), ()> {
         Err(error) => {
             println!("Error while getting my agent: {}", error);
             return Err(());
-        },
+        }
     };
     println!("{:?}", agent);
     Ok(())
