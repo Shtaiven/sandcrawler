@@ -18,19 +18,18 @@ fn to_faction(s: &str) -> Result<models::register_request::Faction, ()> {
     }
 }
 
-fn print_help() -> bool {
+fn print_help() -> () {
     println!("This is a help message");
-    true
 }
 
-async fn run_registration(args: Vec<String>) -> Result<bool, ()> {
+async fn run_registration(args: Vec<String>) -> Result<(), ()> {
     let symbol = if args.len() >= 3 { &args[2] } else { "" };
     let faction = if args.len() >= 4 {
         match to_faction(&args[3]) {
             Ok(faction) => faction,
             Err(_) => {
                 println!("Invalid faction");
-                return Ok(false);
+                return Err(());
             }
         }
     } else {
@@ -40,10 +39,10 @@ async fn run_registration(args: Vec<String>) -> Result<bool, ()> {
 
     if symbol.is_empty() {
         println!("Must provide a symbol with registration");
-        return Ok(false);
+        return Err(());
     } else if symbol.len() < 3 || symbol.len() > 14 {
         println!("Symbol must be between 3 and 14 characters");
-        return Ok(false);
+        return Err(());
     }
 
     let configuration = apis::configuration::Configuration::new();
@@ -58,7 +57,7 @@ async fn run_registration(args: Vec<String>) -> Result<bool, ()> {
         Ok(response) => response.data,
         Err(error) => {
             println!("Registration error: {:?}", error);
-            return Ok(false);
+            return Err(());
         },
     };
 
@@ -68,21 +67,34 @@ async fn run_registration(args: Vec<String>) -> Result<bool, ()> {
 
     let mut file = match file_result {
         Ok(f) => f,
-        Err(error) => return Ok(false),
+        Err(error) => {
+            println!("Couldn't write token to file {}", token_file_path);
+            return Err(());
+        },
     };
     file.write_all(registration.token.as_bytes());
     println!("Registration of {symbol} succeeded\nToken written to {token_file_path}");
-    Ok(true)
+    Ok(())
 }
 
-async fn run_cli(token_file: &str) -> Result<bool, ()> {
+async fn run_cli(token_file: &str) -> Result<(), ()> {
     println!("Starting CLI with token file: {token_file}");
     let token = fs::read_to_string(token_file).expect("Couldn't read token file contents");
 
+    let mut configuration = apis::configuration::Configuration::new();
+    configuration.bearer_access_token = Some(token);
+
     // TODO: Turn this into a cli app
-    let agent = apis::my_agent_details(&token).await?;
+    let agent_result = apis::agents_api::get_my_agent(&configuration).await;
+    let agent = match agent_result {
+        Ok(agent) => agent,
+        Err(error) => {
+            println!("Error while getting my agent: {}", error);
+            return Err(());
+        },
+    };
     println!("{:?}", agent);
-    Ok(true)
+    Ok(())
 }
 
 #[tokio::main]
